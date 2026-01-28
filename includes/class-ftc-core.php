@@ -264,9 +264,18 @@ class FTC_Core {
                 'noResults' => __('No results found', 'family-tree-connect'),
                 'loading' => __('Loading...', 'family-tree-connect'),
                 'confirmMerge' => __('Send merge request?', 'family-tree-connect'),
+                'createTree' => __('Create New Tree', 'family-tree-connect'),
+                'treeName' => __('Tree Name', 'family-tree-connect'),
+                'treeDescription' => __('Description', 'family-tree-connect'),
+                'treePrivacy' => __('Privacy', 'family-tree-connect'),
+                'privacyPublic' => __('Public', 'family-tree-connect'),
+                'privacyPrivate' => __('Private', 'family-tree-connect'),
+                'privacyShared' => __('Shared', 'family-tree-connect'),
+                'treeNameRequired' => __('Tree name is required.', 'family-tree-connect'),
             ),
             'eventTypes' => FTC_Event::get_event_types(),
             'calendarSystems' => FTC_Calendar::get_calendar_systems(),
+            'userCanSetPrivacy' => FTC_Core::get_option('tree_privacy_mode', 'user_choice') === 'user_choice',
         ));
     }
     

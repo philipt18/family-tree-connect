@@ -348,10 +348,101 @@
         }
     };
 
+    // Tree form
+    FTC.treeForm = {
+        init: function() {
+            var self = this;
+
+            $(document).on('click', '.ftc-create-tree', function(e) {
+                e.preventDefault();
+                self.openForm();
+            });
+        },
+
+        openForm: function() {
+            var self = this;
+
+            var formHtml = self.getFormHtml();
+
+            var $modal = FTC.modal.open(formHtml, {
+                title: ftcData.strings.createTree,
+                buttons: [
+                    {
+                        text: 'Cancel',
+                        class: 'ftc-btn-secondary',
+                        click: function() {
+                            FTC.modal.close();
+                        }
+                    },
+                    {
+                        text: ftcData.strings.createTree,
+                        class: 'ftc-btn-primary',
+                        click: function() {
+                            self.submitForm($modal);
+                        }
+                    }
+                ]
+            });
+        },
+
+        getFormHtml: function() {
+            var html = '<form class="ftc-tree-form">' +
+                '<div class="ftc-form-group">' +
+                    '<label class="ftc-form-label">' + ftcData.strings.treeName + '</label>' +
+                    '<input type="text" name="name" class="ftc-form-input" required>' +
+                '</div>' +
+                '<div class="ftc-form-group">' +
+                    '<label class="ftc-form-label">' + ftcData.strings.treeDescription + '</label>' +
+                    '<textarea name="description" class="ftc-form-textarea" rows="3"></textarea>' +
+                '</div>';
+
+            if (ftcData.userCanSetPrivacy) {
+                html += '<div class="ftc-form-group">' +
+                    '<label class="ftc-form-label">' + ftcData.strings.treePrivacy + '</label>' +
+                    '<select name="privacy" class="ftc-form-select">' +
+                        '<option value="private">' + ftcData.strings.privacyPrivate + '</option>' +
+                        '<option value="public">' + ftcData.strings.privacyPublic + '</option>' +
+                        '<option value="shared">' + ftcData.strings.privacyShared + '</option>' +
+                    '</select>' +
+                '</div>';
+            }
+
+            html += '</form>';
+            return html;
+        },
+
+        submitForm: function($modal) {
+            var $form = $modal.find('.ftc-tree-form');
+            var data = {};
+
+            $form.find('input, select, textarea').each(function() {
+                var $field = $(this);
+                var name = $field.attr('name');
+                if (name) {
+                    data[name] = $field.val();
+                }
+            });
+
+            if (!data.name || !data.name.trim()) {
+                FTC.notify(ftcData.strings.treeNameRequired, 'error');
+                return;
+            }
+
+            FTC.ajax('ftc_create_tree', { tree: data }, function(err, response) {
+                if (!err) {
+                    FTC.notify(ftcData.strings.saved, 'success');
+                    FTC.modal.close($modal);
+                    location.reload();
+                }
+            });
+        }
+    };
+
     // Initialize
     $(document).ready(function() {
         FTC.search.init();
         FTC.personForm.init();
+        FTC.treeForm.init();
         
         // Mark notifications as read
         $(document).on('click', '.ftc-notification-item:not(.read)', function() {

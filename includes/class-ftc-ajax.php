@@ -64,6 +64,9 @@ class FTC_Ajax {
         // Custom fields
         add_action('wp_ajax_ftc_create_custom_field', array($this, 'create_custom_field'));
         add_action('wp_ajax_ftc_save_custom_values', array($this, 'save_custom_values'));
+
+        // Tree actions
+        add_action('wp_ajax_ftc_create_tree', array($this, 'create_tree'));
     }
     
     /**
@@ -584,5 +587,59 @@ class FTC_Ajax {
         }
         
         wp_send_json_success();
+    }
+
+    /**
+     * Create tree
+     */
+    public function create_tree() {
+        $this->verify_nonce();
+
+        $user_id = get_current_user_id();
+        if (!$user_id) {
+            wp_send_json_error(array('message' => __('You must be logged in.', 'family-tree-connect')));
+        }
+
+        $data = $_POST['tree'] ?? array();
+
+        $name = sanitize_text_field($data['name'] ?? '');
+        if (empty($name)) {
+            wp_send_json_error(array('message' => __('Tree name is required.', 'family-tree-connect')));
+        }
+
+        $description = sanitize_textarea_field($data['description'] ?? '');
+
+        // Determine privacy based on admin setting
+        $privacy_mode = FTC_Core::get_option('tree_privacy_mode', 'user_choice');
+        if ($privacy_mode === 'admin_enforced') {
+            $privacy = FTC_Core::get_option('default_privacy', 'private');
+        } else {
+            $privacy = in_array($data['privacy'] ?? '', array('public', 'private', 'shared'))
+                ? $data['privacy']
+                : FTC_Core::get_option('default_privacy', 'private');
+        }
+
+        global $wpdb;
+        $tables = FTC_Database::get_table_names();
+
+        $wpdb->insert($tables['trees'], array(
+            'user_id'     => $user_id,
+            'name'        => $name,
+            'description' => $description,
+            'privacy'     => $privacy,
+        ));
+
+        $tree_id = $wpdb->insert_id;
+
+        if (!$tree_id) {
+            wp_send_json_error(array('message' => __('Failed to create tree.', 'family-tree-connect')));
+        }
+
+        $tree = $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM {$tables['trees']} WHERE id = %d",
+            $tree_id
+        ));
+
+        wp_send_json_success(array('tree' => $tree));
     }
 }

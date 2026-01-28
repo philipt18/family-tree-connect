@@ -40,6 +40,14 @@ class FTC_Admin_Settings {
             'ftc_general_section'
         );
 
+        add_settings_field(
+            'tree_privacy_mode',
+            __('Tree Privacy Mode', 'family-tree-connect'),
+            array($this, 'tree_privacy_mode_field_callback'),
+            'ftc-settings',
+            'ftc_general_section'
+        );
+
         // Chart section
         add_settings_section(
             'ftc_chart_section',
@@ -135,6 +143,26 @@ class FTC_Admin_Settings {
             );
         }
         echo '</select>';
+    }
+
+    public function tree_privacy_mode_field_callback() {
+        $options = get_option('ftc_options', array());
+        $current = $options['tree_privacy_mode'] ?? 'user_choice';
+        $choices = array(
+            'user_choice'    => __('User Choice', 'family-tree-connect'),
+            'admin_enforced' => __('Admin Enforced', 'family-tree-connect'),
+        );
+        echo '<select name="ftc_options[tree_privacy_mode]">';
+        foreach ($choices as $key => $label) {
+            printf(
+                '<option value="%s" %s>%s</option>',
+                esc_attr($key),
+                selected($current, $key, false),
+                esc_html($label)
+            );
+        }
+        echo '</select>';
+        echo '<p class="description">' . esc_html__('User Choice lets users pick privacy when creating a tree. Admin Enforced uses the Default Privacy setting above for all new trees.', 'family-tree-connect') . '</p>';
     }
 
     public function chart_type_field_callback() {

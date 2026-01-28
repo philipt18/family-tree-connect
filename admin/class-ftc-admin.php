@@ -95,7 +95,10 @@ class FTC_Admin {
         $sanitized['enable_facial_recognition'] = (int) (bool) ($options['enable_facial_recognition'] ?? 1);
         $sanitized['enable_email_notifications'] = (int) (bool) ($options['enable_email_notifications'] ?? 1);
         $sanitized['default_privacy'] = sanitize_key($options['default_privacy'] ?? 'private');
-        
+        $sanitized['tree_privacy_mode'] = in_array($options['tree_privacy_mode'] ?? '', array('user_choice', 'admin_enforced'))
+            ? $options['tree_privacy_mode']
+            : 'user_choice';
+
         return $sanitized;
     }
     

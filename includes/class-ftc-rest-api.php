@@ -68,7 +68,13 @@ class FTC_REST_API {
             'callback' => array($this, 'get_trees'),
             'permission_callback' => array($this, 'check_write_permission'),
         ));
-        
+
+        register_rest_route($this->namespace, '/trees', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'create_tree'),
+            'permission_callback' => array($this, 'check_write_permission'),
+        ));
+
         register_rest_route($this->namespace, '/trees/(?P<id>\d+)/persons', array(
             'methods' => 'GET',
             'callback' => array($this, 'get_tree_persons'),
@@ -219,7 +225,53 @@ class FTC_REST_API {
         
         return rest_ensure_response($trees);
     }
-    
+
+    public function create_tree($request) {
+        $data = $request->get_json_params();
+
+        $user_id = get_current_user_id();
+        $name = sanitize_text_field($data['name'] ?? '');
+
+        if (empty($name)) {
+            return new WP_Error('missing_name', __('Tree name is required.', 'family-tree-connect'), array('status' => 400));
+        }
+
+        $description = sanitize_textarea_field($data['description'] ?? '');
+
+        // Determine privacy based on admin setting
+        $privacy_mode = FTC_Core::get_option('tree_privacy_mode', 'user_choice');
+        if ($privacy_mode === 'admin_enforced') {
+            $privacy = FTC_Core::get_option('default_privacy', 'private');
+        } else {
+            $privacy = in_array($data['privacy'] ?? '', array('public', 'private', 'shared'))
+                ? $data['privacy']
+                : FTC_Core::get_option('default_privacy', 'private');
+        }
+
+        global $wpdb;
+        $tables = FTC_Database::get_table_names();
+
+        $wpdb->insert($tables['trees'], array(
+            'user_id'     => $user_id,
+            'name'        => $name,
+            'description' => $description,
+            'privacy'     => $privacy,
+        ));
+
+        $tree_id = $wpdb->insert_id;
+
+        if (!$tree_id) {
+            return new WP_Error('create_failed', __('Failed to create tree.', 'family-tree-connect'), array('status' => 500));
+        }
+
+        $tree = $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM {$tables['trees']} WHERE id = %d",
+            $tree_id
+        ));
+
+        return rest_ensure_response($tree);
+    }
+
     public function get_tree_persons($request) {
         $persons = FTC_Core::get_instance()->person->get_by_tree($request['id']);
         return rest_ensure_response($persons);

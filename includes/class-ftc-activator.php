@@ -27,6 +27,8 @@ class FTC_Activator {
             'default_chart_generations' => 4,
             'enable_facial_recognition' => 1,
             'enable_email_notifications' => 1,
+            'default_privacy' => 'private',
+            'tree_privacy_mode' => 'user_choice',
         );
         
         if (!get_option('ftc_options')) {
