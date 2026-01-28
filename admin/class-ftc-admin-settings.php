@@ -106,7 +106,8 @@ class FTC_Admin_Settings {
         $current = $options['default_calendar'] ?? 'gregorian';
         $calendars = FTC_Calendar::get_calendar_systems();
         echo '<select name="ftc_options[default_calendar]">';
-        foreach ($calendars as $key => $label) {
+        foreach ($calendars as $key => $calendar) {
+            $label = is_array($calendar) ? $calendar['name'] : $calendar;
             printf(
                 '<option value="%s" %s>%s</option>',
                 esc_attr($key),
