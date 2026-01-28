@@ -1,0 +1,78 @@
+/**
+ * Family Tree Connect - RTL Styles
+ */
+
+/* Direction */
+.ftc-rtl,
+[dir="rtl"] .ftc-container {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Person Profile */
+[dir="rtl"] .ftc-person-card.male,
+[dir="rtl"] .ftc-person-card.female {
+    border-left: none;
+}
+
+[dir="rtl"] .ftc-person-card.male {
+    border-right: 4px solid var(--ftc-male);
+}
+
+[dir="rtl"] .ftc-person-card.female {
+    border-right: 4px solid var(--ftc-female);
+}
+
+/* Timeline */
+[dir="rtl"] .ftc-timeline {
+    padding-left: 0;
+    padding-right: 30px;
+}
+
+[dir="rtl"] .ftc-timeline::before {
+    left: auto;
+    right: 8px;
+}
+
+[dir="rtl"] .ftc-timeline-item::before {
+    left: auto;
+    right: -26px;
+}
+
+/* Notifications */
+[dir="rtl"] .ftc-notification {
+    border-left: none;
+}
+
+[dir="rtl"] .ftc-notification-success {
+    border-right: 4px solid var(--ftc-success);
+}
+
+[dir="rtl"] .ftc-notification-error {
+    border-right: 4px solid var(--ftc-danger);
+}
+
+[dir="rtl"] .ftc-notification-info {
+    border-right: 4px solid var(--ftc-primary);
+}
+
+/* Search */
+[dir="rtl"] .ftc-search-form {
+    flex-direction: row-reverse;
+}
+
+/* Context */
+[dir="rtl"] .ftc-context {
+    margin-left: 0;
+    margin-right: 10px;
+}
+
+/* Modals */
+[dir="rtl"] .ftc-modal-footer {
+    flex-direction: row-reverse;
+}
+
+/* Chart */
+[dir="rtl"] .ftc-chart-container {
+    direction: ltr;
+}

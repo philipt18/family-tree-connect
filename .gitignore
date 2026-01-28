@@ -1,0 +1,14 @@
+# Local configuration
+.dnconfig
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.sublime-*
+
+# WordPress
+wp-config.php

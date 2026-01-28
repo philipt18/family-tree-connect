@@ -1,0 +1,202 @@
+/**
+ * Family Tree Connect - Chart Styles
+ */
+
+.ftc-chart {
+    position: relative;
+    background: #fff;
+    border-radius: var(--ftc-radius);
+    box-shadow: var(--ftc-shadow);
+    overflow: hidden;
+}
+
+.ftc-chart-toolbar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    display: flex;
+    gap: 5px;
+}
+
+.ftc-chart-toolbar button {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: var(--ftc-radius);
+    background: #fff;
+    box-shadow: var(--ftc-shadow);
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.2s;
+}
+
+.ftc-chart-toolbar button:hover {
+    background: var(--ftc-bg);
+}
+
+.ftc-chart-container {
+    overflow: auto;
+    min-height: 400px;
+    max-height: 80vh;
+}
+
+.ftc-chart-canvas {
+    min-width: 100%;
+    min-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+/* Chart Nodes */
+.ftc-chart-node {
+    position: absolute;
+    min-width: 180px;
+    background: #fff;
+    border-radius: var(--ftc-radius);
+    box-shadow: var(--ftc-shadow);
+    padding: 12px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    gap: 10px;
+}
+
+.ftc-chart-node:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.ftc-chart-node.male {
+    border-top: 4px solid var(--ftc-male);
+}
+
+.ftc-chart-node.female {
+    border-top: 4px solid var(--ftc-female);
+}
+
+.ftc-chart-node.other {
+    border-top: 4px solid var(--ftc-other);
+}
+
+.ftc-chart-node.unknown {
+    border-top: 4px solid var(--ftc-unknown);
+}
+
+.ftc-chart-node.selected {
+    border-color: var(--ftc-primary);
+    box-shadow: 0 0 0 3px rgba(74, 144, 164, 0.3);
+}
+
+.ftc-chart-node-photo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--ftc-bg);
+}
+
+.ftc-chart-node-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ftc-chart-node-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.ftc-chart-node-name {
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ftc-chart-node-dates {
+    font-size: 11px;
+    color: var(--ftc-text-light);
+    margin-top: 4px;
+}
+
+/* Chart Edges */
+.ftc-chart-edge {
+    stroke: var(--ftc-border);
+    stroke-width: 2;
+    fill: none;
+}
+
+.ftc-chart-edge-spouse {
+    stroke-dasharray: 5, 5;
+}
+
+/* SVG Chart */
+.ftc-chart svg {
+    max-width: 100%;
+    height: auto;
+}
+
+.ftc-chart svg .ftc-node rect {
+    cursor: pointer;
+    transition: filter 0.2s;
+}
+
+.ftc-chart svg .ftc-node:hover rect {
+    filter: brightness(0.95);
+}
+
+.ftc-chart svg .ftc-node text {
+    pointer-events: none;
+}
+
+/* Chart Types */
+.ftc-chart-options {
+    padding: 15px;
+    border-bottom: 1px solid var(--ftc-border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+}
+
+.ftc-chart-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ftc-chart-option label {
+    font-size: 14px;
+    color: var(--ftc-text-light);
+}
+
+.ftc-chart-option select {
+    padding: 6px 12px;
+    border: 1px solid var(--ftc-border);
+    border-radius: var(--ftc-radius);
+    font-size: 14px;
+}
+
+/* Loading State */
+.ftc-chart-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    gap: 15px;
+    color: var(--ftc-text-light);
+}
+
+/* Zoom */
+.ftc-chart.zoomed .ftc-chart-canvas {
+    cursor: grab;
+}
+
+.ftc-chart.zoomed .ftc-chart-canvas:active {
+    cursor: grabbing;
+}
